@@ -3,6 +3,8 @@
 #include <Windows.h>
 #include <list>
 
+//make sure to add the sfml stuff woopsies
+
 using namespace std;
 
 //setup window size
