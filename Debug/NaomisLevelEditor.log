@@ -1,0 +1,4 @@
+﻿  Source.cpp
+C:\Users\ntuckerholt\source\repos\NaomisLevelEditor\Source.cpp(48,25): warning C4244:  'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ntuckerholt\source\repos\NaomisLevelEditor\Source.cpp(48,22): warning C4244:  'argument': conversion from 'int' to 'float', possible loss of data
+  NaomisLevelEditor.vcxproj -> C:\Users\ntuckerholt\source\repos\NaomisLevelEditor\Debug\NaomisLevelEditor.exe
