@@ -17,6 +17,9 @@ const int y = 20;
 sf::Vector2f worldPos;
 //track 
 bool actorNotTile = false;
+std::string tempsavename;
+std::list <string> Savenames;
+std::list<string>::iterator it;
 
 class Actor : public sf::Drawable, public sf::Transformable
 {
@@ -298,22 +301,41 @@ public:
 	}
 };
 
+//how to print things yo
+void Print()
+{
+
+
+}
 //saving
 void save(Tile tile[x][y])
 {
-	//writing to a text file
-	ofstream myfile("save.sav");
 
+	//list<sf::Vector2i> saveNames;
+	
+	
 	list<sf::Vector2i> coinPos;
 	list<sf::Vector2i> enemyPos;
 	list<sf::Vector2i> trapPos;
 	sf::Vector2i playerPos;
 	sf::Vector2i exitPos;
+	
+	std::cout << "Please, name your save file: ";
+	std::getline(std::cin, tempsavename);
+	Savenames.push_back(tempsavename);
+	//writing to a text file
+	ofstream myfile(tempsavename + ".sav");
+	
+	//Savenames.insert(std::getline(std::cin, savename));
+
 
 
 	if (myfile.is_open())
 	{
 		cout << "saving Tiles \n";
+		
+
+		//after saving successfully write the saves into a list 
 		for (int i = 0; i < x; i++)
 		{
 			for (int j = 0; j < y; j++)
@@ -442,7 +464,11 @@ void save(Tile tile[x][y])
 void load(Tile tile[x][y])
 {
 	string line;
-	ifstream myfile("save.sav");
+	
+
+	std::cout << "what is your file name? ";
+	std::getline(std::cin, tempsavename);
+	ifstream myfile(tempsavename + ".sav");
 	if (myfile.is_open())
 	{
 		int a = 0;
@@ -627,6 +653,7 @@ void printToConsole(Tile tile[x][y])
 
 int main()
 {
+
 	//setup space for our tool bar
 	ToolPanel tools;
 	sf::View toolsView(sf::FloatRect(0, 0.f, windowWidth * 0.045f, windowHeight));
