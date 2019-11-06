@@ -1,5 +1,0 @@
-﻿  Source.cpp
-C:\Users\ntuckerholt\Desktop\NaomisLevelEditor\Source.cpp(54,25): warning C4244:  'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\ntuckerholt\Desktop\NaomisLevelEditor\Source.cpp(54,22): warning C4244:  'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\ntuckerholt\Desktop\NaomisLevelEditor\Source.cpp(259,23): warning C4018:  '<': signed/unsigned mismatch
-  NaomisLevelEditor.vcxproj -> C:\Users\ntuckerholt\Desktop\NaomisLevelEditor\Debug\NaomisLevelEditor.exe
