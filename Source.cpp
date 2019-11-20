@@ -5,6 +5,7 @@
 #include <functional>
 #include "Editor.h"
 #include "Game.h"
+#include "Menu.h"
 
 
 
@@ -14,35 +15,51 @@ using namespace std;
 int main()
 {
 
-	EditorClass EditorBackup;
-	GameClass myGame;
+	EditorClass EditorClassholder;
+	GameClass MyGameholder;
+	MenuClass Menuclassholder;
+
 
 	enum GameType
 	{
 		Editor,
-		Game
+		Game,
+		Menu
 	};
-	GameType myGameType = Editor;
+	GameType myGameType = Menu;
 	
 	//menu screen with select mode
 	//clicking onm a mode 
 
 	switch (myGameType)
 	{
+	case Menu:
+
+
+		if (!Menuclassholder.Start())
+		{
+			return EXIT_FAILURE;
+		
+		}
+		else {
+		return Menuclassholder.Update();
+		cout << "meeeeennnuuuuu";
+		}
+			return 0;
 	case Editor:
-		if (!EditorBackup.Start())
+		if (!EditorClassholder.Start())
 		{
 			return EXIT_FAILURE;
 		}
-		return EditorBackup.Update();
+		return EditorClassholder.Update();
 		return 0;
 
 	case Game:
-		if (!EditorBackup.Start())
+		if (!MyGameholder.Start())
 		{
 			return EXIT_FAILURE;
 		}
-		return myGame.Update();
+		return MyGameholder.Update();
 		return 0;
 
 	}
@@ -54,6 +71,25 @@ int main()
 
 }
 
+bool MenuClass::Start() 
+{
+	MenuView = sf::View(sf::FloatRect(0, 0.f, windowWidth, windowHeight));
+	MenuView.setViewport(sf::FloatRect(0.03f, 0, 1, 1));
+	Window.create(sf::VideoMode(windowWidth, windowHeight), "Menu", sf::Style::Titlebar | sf::Style::Close);
+
+	Window.clear(sf::Color::White);
+	Window.setView(MenuView);
+	
+	return true;
+
+}
+
+int MenuClass::Update() 
+{
+	
+	std::getline(std::cin, debug);
+	return 0;
+}
 
 bool EditorClass::Start()
 {
@@ -231,6 +267,7 @@ bool GameClass::Start()
 int GameClass::Update() 
 {
 	//run game
+	//while (window.isOpen())
 	return 0;
 };
 
