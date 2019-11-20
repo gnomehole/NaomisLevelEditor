@@ -4,23 +4,35 @@
 #include <fstream>
 #include <list> 	
 #include <functional>
+#include "Button.h"
 //#include "arial.h"
 
 
 
-
-class Menubuttons
+class MenuButtons : public Button
 {
-
+private:
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+	{
+		target.draw(LoadEditor, states);
+		target.draw(circle, states);
+	}
+public:
+	Button LoadEditor;
+	Button circle;
+	//Init
+	MenuButtons();
 };
 
 class MenuClass
 {
 
 public: 
+
+	MenuButtons	mButtons;
 	std:: string debug;
-	const int windowWidth = 1080;
-	const int windowHeight = 720;
+	const int mWindowWidth = 1080;
+	const int mWindowHeight = 720;
 
 	bool Start();
 	int Update();
@@ -33,6 +45,7 @@ public:
 
 
 };
+
 
 
 

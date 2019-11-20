@@ -27,7 +27,7 @@ int main()
 		Menu
 	};
 	GameType myGameType = Menu;
-	
+
 	//menu screen with select mode
 	//clicking onm a mode 
 
@@ -39,13 +39,11 @@ int main()
 		if (!Menuclassholder.Start())
 		{
 			return EXIT_FAILURE;
-		
+
 		}
-		else {
 		return Menuclassholder.Update();
-		cout << "meeeeennnuuuuu";
-		}
-			return 0;
+		return 0;
+
 	case Editor:
 		if (!EditorClassholder.Start())
 		{
@@ -63,32 +61,61 @@ int main()
 		return 0;
 
 	}
-	
-	
+
+	//game loop
+
+
 	//move to editor case
-	
+
 	//Game Loop
 
 }
 
-bool MenuClass::Start() 
+bool MenuClass::Start()
 {
-	MenuView = sf::View(sf::FloatRect(0, 0.f, windowWidth, windowHeight));
-	MenuView.setViewport(sf::FloatRect(0.03f, 0, 1, 1));
-	Window.create(sf::VideoMode(windowWidth, windowHeight), "Menu", sf::Style::Titlebar | sf::Style::Close);
 
-	Window.clear(sf::Color::White);
-	Window.setView(MenuView);
-	
+	//MenuView = sf::View(sf::FloatRect(0, 0.f, mWindowWidth, mWindowHeight));
+	//MenuView.setViewport(sf::FloatRect(0.03f, 0, 1, 1));
+	Window.create(sf::VideoMode(mWindowWidth, mWindowHeight), "Menu", sf::Style::Titlebar | sf::Style::Close);
+	//Window.setView(MenuView);
+	//Window.clear(sf::Color::White);
+
+
 	return true;
 
 }
 
-int MenuClass::Update() 
+int MenuClass::Update()
 {
 	
-	std::getline(std::cin, debug);
+
+	while (Window.isOpen())
+	{
+		sf::Event event;
+		while (Window.pollEvent(event))
+		{
+			switch (event.type)
+			{
+			case sf::Event::Closed:
+				Window.close();
+				break;
+
+			}
+
+			//Prepare the window for displaying stuff
+			Window.clear(sf::Color::White);
+			//Window.setView(MenuView);
+
+			//mButtons.LoadEditor.checkClick(std::bind(&EditorClass::, this, tile), worldPos);
+			worldPos = Window.mapPixelToCoords(sf::Mouse::getPosition(Window), Window.getView());
+			Window.draw(mButtons);
+		}
+		Window.display();
+	}
 	return 0;
+
+//	std::getline(std::cin, debug);
+//	return 0;
 }
 
 bool EditorClass::Start()
@@ -141,7 +168,7 @@ bool EditorClass::Start()
 	return true;
 }
 
-int EditorClass::Update() 
+int EditorClass::Update()
 {
 	//game loop
 	while (window.isOpen())
@@ -258,13 +285,13 @@ int EditorClass::Update()
 	return 0;
 }
 
-bool GameClass::Start() 
+bool GameClass::Start()
 {
 	//setup game
 	return true;
 };
 
-int GameClass::Update() 
+int GameClass::Update()
 {
 	//run game
 	//while (window.isOpen())

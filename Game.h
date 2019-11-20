@@ -8,6 +8,12 @@
 
 using namespace std;
 
+struct Collision
+{
+	bool hit;
+	sf::Vector2f dir;
+};
+
 class Player
 {
 	public:
@@ -15,6 +21,19 @@ class Player
 	int lives = 3;
 	bool isDead = false;
 	int coins = 0;
+
+	sf::FloatRect nextRect;
+
+	sf::Vector2f nextPos;
+
+	sf::Vector2f velocity;
+
+	bool grounded;
+	float speed;
+	float jumpspeed;
+	float radius;
+	Collision CollisionCheck(sf::Vector2f otherPos, float otherRadius);
+	void Refresh();
 
 
 };
