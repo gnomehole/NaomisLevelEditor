@@ -288,11 +288,25 @@ int EditorClass::Update()
 bool GameClass::Start()
 {
 	//setup game
+	//
+	//LoadLevel("bob",tile);
+
+	//load our tiles here for the games
 	return true;
 };
 
 int GameClass::Update()
 {
+	//needs to be in the game while loop
+	//NEED DEELTA TIME FOR MOVING YO 
+	deltaTime = clock.restart().asSeconds();
+
+	//in the game loop check for collisions
+	//if (tile[i][j].type == Tile::Type::Platform)
+	//{
+	//	Collision pcol = player
+	//
+	//}
 	//run game
 	//while (window.isOpen())
 	return 0;

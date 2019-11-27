@@ -16,7 +16,7 @@ public:
 	}
 
 
-
+	//defining them for now but i should be defining them in the cpp files im using them in
 	int textSize = 16;
 	float rectOutline = 1;
 	sf::RectangleShape rect;
