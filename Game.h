@@ -12,7 +12,9 @@ struct Collision
 class Player : public Actor
 {
 public:
+public:
 	Player();
+
 	int lives;
 	int coins;
 	bool isDead;
@@ -28,10 +30,13 @@ public:
 	float jumpSpeed;
 	//this value is used for detecting collisions.
 	float radius;
-	//there needs to be two colision checks, one for rect and one for circle
-	Collision CollisionCheck(sf::Vector2f otherPos, float otherRadius);
 	Collision CollisionCheck(sf::FloatRect other);
+	Collision CollisionCheck(sf::Vector2f otherPos, float otherRadius);
 	void Refresh();
+	sf::Vector2f startPos;
+	virtual sf::Vector2f getPosition();
+	virtual void setPosition(sf::Vector2f v);
+	virtual void setPosition(float x, float y);
 
 };
 
@@ -43,19 +48,34 @@ public:
 	//collision info (based on sf::Sprite)
 };
 
+class GameScreen : public Grid
+{
+
+private:
+
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+	{
+		target.draw(grid, states);
+	
+	}
+public:
+	Grid grid;
+	GameScreen();
+	//Init
+
+};
+
+
 class GameClass: public Grid
 {
 public:
 	GameClass();
 	bool Start();
 	int Update();
-	//static const int x = 30;
-	//static const int y = 20;
-	//setup window size
-	const int windowWidth = 1025;
-	const int windowHeight = 650;
-	sf::RenderWindow window;
+	sf::RenderWindow gWindow;
+	sf::View GameView;
 	Player player;
+	GameScreen gScreen;
 	//Saving a number to a file (did this with savetiles)
 	void SaveScore();
 	//Just put the player back at the start and reload the level file
@@ -64,13 +84,14 @@ public:
 	//Throw to a "Game Over" screen and quit program on button press
 	//setting the display to all black and adding text "GAME OVER"
 	void GameOver();
-	//void LoadLevel(string levelName, Tile inctile[x][y]);
+	//Tiles to load
+	
+	//load level function
+	void LoadLevel(string levelName, Tile incTile[x][y]);
+	//deltaTime stuff
 	sf::Clock clock;
-
-
+	float deltaTime;
 	//physics values
-	float deltaTime; 
 	float gravity;
 	float friction;
-
 };

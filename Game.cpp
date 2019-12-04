@@ -6,17 +6,15 @@ using namespace std;
 GameClass::GameClass() {
 	
 	//setup window size
-	const int gwindowWidth = 1025;
-	const int gwindowHeight = 650;
+
 	gravity = 0.5;
 	friction = 10.0f;
 
-	Tile tile[x][y];
 
-	void save(Tile inctile[x][y]);
-	void load(Tile inctile[x][y]);
+	//void save(Tile inctile[x][y]);
+	//void load(Tile inctile[x][y]);
 }
-//void GameClass::LoadLevel(string levelName, Tile inctile[x][y])
+//void GameClass::LoadLevel()
 //{
 //	string line;
 //	ifstream myfile("save.sav");
@@ -169,26 +167,22 @@ GameClass::GameClass() {
 //	}
 //}
 
+GameScreen::GameScreen()
+{
+	grid.setPosition(100, 100);
+}
 
-
-Collision Player::CollisionCheck(sf::Vector2f otherPos, float otherRadius)
+Collision Player::CollisionCheck(sf::FloatRect other)
 {
 	Collision col;
-	float deltaX = (nextPos.x + radius) - (otherPos.x + otherRadius);
-	float deltaY = (nextPos.y + radius) - (otherPos.y + otherRadius);
+	float deltaX = (nextPos.x - (nextRect.width / 2)) - (other.left - other.width / 2);
+	float deltaY = (nextPos.y - (nextRect.width / 2)) - (other.top - other.height / 2);
 
-	float intersectX = abs(deltaX) - (otherRadius + radius);
-	float intersectY = abs(deltaY) - (otherRadius + radius);
+	float intersectX = abs(deltaX) - ((other.width / 2) + (nextRect.width / 2));
+	float intersectY = abs(deltaY) - ((other.height / 2) + (nextRect.height / 2));
 
-	float xDist = abs(nextPos.x - otherPos.x);
-	float yDist = abs(nextPos.y - otherPos.y);
-	float distance = sqrt(xDist * xDist + yDist * yDist);
+	col.hit = (intersectX < 0.0f && intersectY < 0.0f);
 
-
-	
-
-	col.hit = (distance < radius + otherRadius);
-	//col.hit = (intersectX)
 	if (col.hit)
 	{
 		if (intersectX > intersectY)
@@ -221,8 +215,97 @@ Collision Player::CollisionCheck(sf::Vector2f otherPos, float otherRadius)
 	return	col;
 }
 
+Collision Player::CollisionCheck(sf::Vector2f otherPos, float otherRadius)
+{
+	Collision col;
+	float deltaX = (nextPos.x + radius) - (otherPos.x + otherRadius);
+	float deltaY = (nextPos.y + radius) - (otherPos.y + otherRadius);
 
+	float intersectX = abs(deltaX) - (otherRadius + radius);
+	float intersectY = abs(deltaY) - (otherRadius + radius);
 
+	float xDist = abs(nextPos.x - otherPos.x);
+	float yDist = abs(nextPos.y - otherPos.y);
+	float distance = sqrt(xDist * xDist + yDist * yDist);
+
+	col.hit = (distance < radius + otherRadius);
+	if (col.hit)
+	{
+		if (intersectX > intersectY)
+		{
+			if (deltaX > 0.0f)
+			{
+				col.dir = sf::Vector2f(intersectX, 0.0f);
+			}
+			else
+			{
+				col.dir = sf::Vector2f(-intersectX, 0.0f);
+			}
+		}
+		else
+		{
+			if (deltaY > 0.0f)
+			{
+				col.dir = sf::Vector2f(0.0f, intersectY);
+			}
+			else
+			{
+				col.dir = sf::Vector2f(0.0f, -intersectY);
+			}
+		}
+	}
+	else
+	{
+		col.dir = sf::Vector2f(0.0f, 0.0f);
+	}
+	return	col;
+}
+
+Player::Player() {
+	lives = 3;
+	coins = 0;
+	isDead = false;
+	// this is just used to see if the player can jump or not
+	grounded = true;
+	// this is a base value used to base the players acceleration off of.
+	speed = 2.5f;
+	// this is the same thing but for jumping.
+	jumpSpeed = 0.42f;
+	//this value is used for detecting collisions.
+	radius = 16;
+	// this is used to give the player character smooth physics.
+	velocity = sf::Vector2f(0, 0);
+
+}
+
+void Player::Refresh()
+{
+	Actor::RefreshActor();
+	velocity = sf::Vector2f(0.0f, 0.0f);
+	nextPos = getPosition();
+}
+
+sf::Vector2f Player::getPosition()
+{
+	return sprite.getPosition();
+}
+void Player::setPosition(sf::Vector2f v)
+{
+	sprite.setPosition(v);
+}
+void Player::setPosition(float x, float y)
+{
+	sprite.setPosition(x, y);
+}
+
+int sign(int x)
+{
+	return (x > 0) - (x < 0);
+}
+int sign(float x)
+{
+	return (x > 0.0f) - (x < 0.0f);
+}
 
 
 /*
@@ -253,27 +336,4 @@ player.velocity.x -= friction * deltaTime;
 
 
 */
-
-Player::Player() {
-	lives = 3;
-	coins = 0;
-	isDead = false;
-	// this is just used to see if the player can jump or not
-	grounded = false;
-	// this is a base value used to base the players acceleration off of.
-	speed = 2.5f;
-	// this is the same thing but for jumping.
-	jumpSpeed = 0.42f;
-	//this value is used for detecting collisions.
-	radius = 16;
-	// this is used to give the player character smooth physics.
-	velocity = sf::Vector2f(0, 0);
-}
-
-void Player::Refresh()
-{
-	Actor::RefreshActor();
-	velocity = sf::Vector2f(0.0f, 0.0f);
-	nextPos = getPosition();
-}
 

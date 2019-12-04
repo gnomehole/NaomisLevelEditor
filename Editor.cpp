@@ -4,13 +4,11 @@
 using namespace std;
 
 EditorClass::EditorClass() {
-	static const int x = 30;
-	static const int y = 20;
+	
 	//Track if we are painting with actor or tile
 	actorNotTile = false;
 	//setup window size
-	const int windowWidth = 1025;
-	const int windowHeight = 650;
+
 	curActorType = Actor::Type::None;
 	curTileType = Tile::Type::Sky;
 }
@@ -44,7 +42,7 @@ ToolPanel::ToolPanel()
 }
 
 
-void EditorClass::printToConsole(Tile inctile[x][y])
+void EditorClass::printToConsole(Tile** inctile)
 {
 	for (int i = 0; i < x; i++)
 	{

@@ -29,7 +29,7 @@ int main()
 		Editor,
 		Game
 	};
-	GameType myGameType = Editor;
+	GameType myGameType = Game;
 
 	//menu screen with select mode
 	//clicking onm a mode 
@@ -56,11 +56,11 @@ int main()
 		return 0;
 
 	case Game:
-		//if (!MyGameMode.Start())
-		//{
-		//	return EXIT_FAILURE;
-		//}
-		//return MyGameMode.Update();
+		if (!MyGameMode.Start())
+		{
+			return EXIT_FAILURE;
+		}
+		return MyGameMode.Update();
 		return 0;
 
 	}
@@ -79,10 +79,11 @@ int main()
 
 bool MenuClass::Start()
 {
-
+	int	mWindowWidth = 720;
+	int	mWindowHeight = 650;
 	//MenuView = sf::View(sf::FloatRect(0, 0.f, mWindowWidth, mWindowHeight));
 	//MenuView.setViewport(sf::FloatRect(0.03f, 0, 1, 1));
-	Window.create(sf::VideoMode(mWindowWidth, mWindowHeight), "Menu", sf::Style::Titlebar | sf::Style::Close);
+	mWindow.create(sf::VideoMode(mWindowWidth, mWindowHeight), "Menu", sf::Style::Titlebar | sf::Style::Close);
 	//Window.setView(MenuView);
 	//Window.clear(sf::Color::White);
 
@@ -95,28 +96,28 @@ int MenuClass::Update()
 {
 	
 
-	while (Window.isOpen())
+	while (mWindow.isOpen())
 	{
 		sf::Event event;
-		while (Window.pollEvent(event))
+		while (mWindow.pollEvent(event))
 		{
 			switch (event.type)
 			{
 			case sf::Event::Closed:
-				Window.close();
+				mWindow.close();
 				break;
 
 			}
 
 			//Prepare the window for displaying stuff
-			Window.clear(sf::Color::White);
+			mWindow.clear(sf::Color::White);
 			//Window.setView(MenuView);
 
 			//mButtons.LoadEditor.checkClick(std::bind(&EditorClass::, this, tile), worldPos);
-			worldPos = Window.mapPixelToCoords(sf::Mouse::getPosition(Window), Window.getView());
-			Window.draw(mScreen);
+			worldPos = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow), mWindow.getView());
+			mWindow.draw(mScreen);
 		}
-		Window.display();
+		mWindow.display();
 	}
 	return 0;
 
@@ -128,6 +129,8 @@ bool EditorClass::Start()
 {
 	toolsView = sf::View(sf::FloatRect(0, 0.f, windowWidth * 0.045f, windowHeight));
 	toolsView.setViewport(sf::FloatRect(0, 0, 0.045f, 1));
+
+	
 
 	levelEditView = sf::View(sf::FloatRect(0, 0.f, windowWidth, windowHeight));
 	levelEditView.setViewport(sf::FloatRect(0.03f, 0, 1, 1)); 
@@ -163,6 +166,7 @@ bool EditorClass::Start()
 	tileButton[8].actor.type = Actor::Type::None;
 	tileButton[8].refreshTile();
 
+
 	//init tiles
 	for (int i = 0; i < x; i++)
 	{
@@ -171,6 +175,9 @@ bool EditorClass::Start()
 			tile[i][j].init(i * 32 + ((windowWidth / 2) - ((32 * x) / 2)), j * 32);
 		}
 	}
+
+	load(tile);
+
 	return true;
 }
 
@@ -295,17 +302,47 @@ bool GameClass::Start()
 {
 	//setup game
 	//
-	//LoadLevel("bob",tile);
-
+	//load();
+	gWindow.create(sf::VideoMode(windowWidth, windowHeight), "My Cool Game", sf::Style::Titlebar | sf::Style::Close);
 	//load our tiles here for the games
+	init(x,y);
+	//load(tile);
 	return true;
 };
 
 int GameClass::Update()
 {
-	//needs to be in the game while loop
-	//NEED DEELTA TIME FOR MOVING YO 
-	deltaTime = clock.restart().asSeconds();
+	// game loop
+		while (gWindow.isOpen())
+		{
+			sf::Event event;
+			while (gWindow.pollEvent(event))
+			{
+				switch (event.type)
+				{
+				case sf::Event::Closed:
+					gWindow.close();
+					break;
+
+					//cycle for current til
+				}
+			}
+			//Prepare the window for displaying stuff
+			gWindow.clear(sf::Color::White);
+			gWindow.setView(GameView);
+			
+			worldPos = gWindow.mapPixelToCoords(sf::Mouse::getPosition(gWindow), gWindow.getView());
+			
+			gWindow.draw(gScreen);
+			
+			deltaTime = clock.restart().asSeconds();
+			
+			
+			//last but not least draw everything to screen
+			gWindow.display();
+		}
+
+
 
 	//in the game loop check for collisions
 	//if (tile[i][j].type == Tile::Type::Platform)

@@ -23,18 +23,18 @@ public:
 	//Init
 	ToolPanel();
 };
-class EditorClass: public Grid
+class EditorClass : public Grid, public Tile 
 {
 public:
 	EditorClass();
 	//Track if we are painting with actor or tile
 	bool actorNotTile;
 	//setup window size
-	const int windowWidth = 1025;
-	const int windowHeight = 650;
+	//const int windowWidth = 1025;
+//	const int windowHeight = 650;
 
 	//Mouse pos
-	sf::Vector2f worldPos;
+
 	sf::View toolsView;
 	sf::View levelEditView;
 	sf::RenderWindow window;
@@ -50,5 +50,5 @@ public:
 	int Update();
 
 	//printing out the tiles
-	void printToConsole(Tile inctile[x][y]);
+	void printToConsole(Tile** inctile);
 };

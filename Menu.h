@@ -24,21 +24,20 @@ public:
 	MenuScreen();
 };
 
-class MenuClass
+class MenuClass 
 {
 
 public: 
-
+	int	mWindowWidth;
+	int	mWindowHeight;
 	MenuScreen	mScreen;
 	std:: string debug;
-	const int mWindowWidth = 1080;
-	const int mWindowHeight = 720;
 
 	bool Start();
 	int Update();
 	sf::Vector2f worldPos;
 	sf::View MenuView;
-	sf::RenderWindow Window;
+	sf::RenderWindow mWindow;
 
 
 

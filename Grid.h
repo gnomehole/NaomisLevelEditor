@@ -2,13 +2,21 @@
 #include "Tile.h"
 
 
-class Grid
+class Grid : public Tile
 {
 	
 	public:
-		static const int x = 30;
-		static const int y = 20;
-		Tile tile[x][y];
-		void save(Tile inctile[x][y]);
-		void load(Tile inctile[x][y]);
+
+		const static int x = 30;
+		const static int y = 20;
+		const int windowWidth = 1025;
+		const int windowHeight = 650;
+		sf::Vector2f worldPos;
+
+		Tile** tile = new Tile* [x];
+		void save(Tile** inctile);
+		void load(Tile** inctile);
+		
+		Grid();
+		
 };

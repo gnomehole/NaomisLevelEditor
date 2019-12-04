@@ -8,7 +8,14 @@
 
 using namespace std;
 
+Grid::Grid()
+{
+	for (int i = 0; i < x; i++)
+	{
+		tile[i] = new Tile[y];
+	}
 
+}
 
 void Actor::loadTextures()
 {
@@ -147,7 +154,7 @@ void Tile::ChangeActor(Actor::Type a)
 	actor.ChangeActor(a);
 }
 
-void Grid::save(Tile inctile[x][y])
+void Grid::save(Tile** inctile)
 {
 	//writing to a text file
 	ofstream myfile("save.sav");
@@ -156,6 +163,7 @@ void Grid::save(Tile inctile[x][y])
 	list<sf::Vector2i> trapPos;
 	sf::Vector2i exitPos;
 	sf::Vector2i playerPos;
+
 
 	if (myfile.is_open())
 	{
@@ -276,7 +284,7 @@ void Grid::save(Tile inctile[x][y])
 	}
 }
 
-void Grid::load(Tile inctile[x][y])
+void Grid::load( Tile** inctile)
 {
 	string line;
 	ifstream myfile("save.sav");
