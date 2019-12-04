@@ -6,27 +6,30 @@
 #include "Editor.h"
 #include "Game.h"
 #include "Menu.h"
+#include "Grid.h"
+
 
 
 
 using namespace std;
 
-
+//does this need to return an int?
 int main()
 {
 
-	EditorClass EditorClassholder;
-	GameClass MyGameholder;
-	MenuClass Menuclassholder;
+	EditorClass EditorMode;
+	//works fine if i get rid of this game mode class instance in the source cpp
+	GameClass MyGameMode;
+	MenuClass MenuMode;
 
-
+	//doesn't work if i just get rid of the game case 
 	enum GameType
 	{
+		Menu,
 		Editor,
-		Game,
-		Menu
+		Game
 	};
-	GameType myGameType = Menu;
+	GameType myGameType = Editor;
 
 	//menu screen with select mode
 	//clicking onm a mode 
@@ -36,28 +39,28 @@ int main()
 	case Menu:
 
 
-		if (!Menuclassholder.Start())
+		if (!MenuMode.Start())
 		{
 			return EXIT_FAILURE;
-
+		
 		}
-		return Menuclassholder.Update();
+		return MenuMode.Update();
 		return 0;
 
 	case Editor:
-		if (!EditorClassholder.Start())
+		if (!EditorMode.Start())
 		{
 			return EXIT_FAILURE;
 		}
-		return EditorClassholder.Update();
+		return EditorMode.Update();
 		return 0;
 
 	case Game:
-		if (!MyGameholder.Start())
-		{
-			return EXIT_FAILURE;
-		}
-		return MyGameholder.Update();
+		//if (!MyGameMode.Start())
+		//{
+		//	return EXIT_FAILURE;
+		//}
+		//return MyGameMode.Update();
 		return 0;
 
 	}
@@ -68,6 +71,9 @@ int main()
 	//move to editor case
 
 	//Game Loop
+
+	//??
+	return 0;
 
 }
 
@@ -108,7 +114,7 @@ int MenuClass::Update()
 
 			//mButtons.LoadEditor.checkClick(std::bind(&EditorClass::, this, tile), worldPos);
 			worldPos = Window.mapPixelToCoords(sf::Mouse::getPosition(Window), Window.getView());
-			Window.draw(mButtons);
+			Window.draw(mScreen);
 		}
 		Window.display();
 	}
@@ -124,7 +130,7 @@ bool EditorClass::Start()
 	toolsView.setViewport(sf::FloatRect(0, 0, 0.045f, 1));
 
 	levelEditView = sf::View(sf::FloatRect(0, 0.f, windowWidth, windowHeight));
-	levelEditView.setViewport(sf::FloatRect(0.03f, 0, 1, 1));
+	levelEditView.setViewport(sf::FloatRect(0.03f, 0, 1, 1)); 
 
 	//Setup Window
 	window.create(sf::VideoMode(windowWidth, windowHeight), "Level Editor", sf::Style::Titlebar | sf::Style::Close);
@@ -213,8 +219,8 @@ int EditorClass::Update()
 		//ned to accoun t for the toolbar here for tools
 		worldPos = window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getView());
 		//Save and Load functionality
-		tools.saveButton.checkClick(std::bind(&EditorClass::save, this, tile), worldPos);
-		tools.loadButton.checkClick(std::bind(&EditorClass::load, this, tile), worldPos);
+		tools.saveButton.checkClick(std::bind(&Grid::save, this, tile), worldPos);
+		tools.loadButton.checkClick(std::bind(&Grid::load, this, tile), worldPos);
 
 		//loop the toolbar tiles
 		for (int i = 0; i < 9; i++)

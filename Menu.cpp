@@ -5,7 +5,7 @@
 
 
 
-MenuButtons::MenuButtons()
+MenuScreen::MenuScreen()
 {
 
 	LoadEditor.text.setString("Load Editor");

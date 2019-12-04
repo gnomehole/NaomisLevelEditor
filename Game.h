@@ -43,14 +43,14 @@ public:
 	//collision info (based on sf::Sprite)
 };
 
-class GameClass
+class GameClass: public Grid
 {
 public:
 	GameClass();
 	bool Start();
 	int Update();
-	static const int x = 30;
-	static const int y = 20;
+	//static const int x = 30;
+	//static const int y = 20;
 	//setup window size
 	const int windowWidth = 1025;
 	const int windowHeight = 650;

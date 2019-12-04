@@ -1,15 +1,20 @@
 #include "Game.h"
 
+
 using namespace std;
 
 GameClass::GameClass() {
-	static const int x = 30;
-	static const int y = 20;
+	
 	//setup window size
 	const int gwindowWidth = 1025;
 	const int gwindowHeight = 650;
 	gravity = 0.5;
 	friction = 10.0f;
+
+	Tile tile[x][y];
+
+	void save(Tile inctile[x][y]);
+	void load(Tile inctile[x][y]);
 }
 //void GameClass::LoadLevel(string levelName, Tile inctile[x][y])
 //{
@@ -179,34 +184,7 @@ Collision Player::CollisionCheck(sf::Vector2f otherPos, float otherRadius)
 	float yDist = abs(nextPos.y - otherPos.y);
 	float distance = sqrt(xDist * xDist + yDist * yDist);
 
-	/*
-	if (p.col.hit)
-	{
-	 if (pcol.dir.x = 0)
-	 {
-	 if(pcol.dir.y >0)
-	 {
-		player.nextPos.y = tile[i][j].sprite.getGlobalBounds().top - 32  - 0.1f
-		player.grounded = true;
-		player.velocity.y = 0.0f
-	 }
-	 }
 
-	 else
-	 {
-	 if (pcol.dir.x >= 0.0f)
-	 {
-	 player.nextPos.X
-	 
-	 }
-	 
-	 }
-	 
-	 }
-	
-	}
-	
-	*/
 	
 
 	col.hit = (distance < radius + otherRadius);

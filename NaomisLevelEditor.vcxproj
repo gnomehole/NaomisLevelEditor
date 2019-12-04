@@ -143,16 +143,19 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actor.h" />
     <ClInclude Include="arial.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Header.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="Tile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

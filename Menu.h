@@ -9,7 +9,7 @@
 
 
 
-class MenuButtons : public Button
+class MenuScreen : public Button
 {
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -21,7 +21,7 @@ public:
 	Button LoadEditor;
 	Button circle;
 	//Init
-	MenuButtons();
+	MenuScreen();
 };
 
 class MenuClass
@@ -29,7 +29,7 @@ class MenuClass
 
 public: 
 
-	MenuButtons	mButtons;
+	MenuScreen	mScreen;
 	std:: string debug;
 	const int mWindowWidth = 1080;
 	const int mWindowHeight = 720;
