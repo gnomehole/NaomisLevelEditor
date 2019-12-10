@@ -16,6 +16,7 @@ private:
 	{
 		target.draw(LoadEditor, states);
 		target.draw(circle, states);
+		std::cout << "menu is drawing";
 	}
 public:
 	Button LoadEditor;

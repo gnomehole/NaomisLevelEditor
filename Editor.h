@@ -46,6 +46,8 @@ public:
 	//Set up tiles to select and paint with
 	Tile tileButton[9];
 
+	sf::Vector2f ToolandEditorwindow;
+
 	bool Start();
 	int Update();
 

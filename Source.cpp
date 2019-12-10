@@ -29,7 +29,7 @@ int main()
 		Editor,
 		Game
 	};
-	GameType myGameType = Game;
+	GameType myGameType = Editor;
 
 	//menu screen with select mode
 	//clicking onm a mode 
@@ -183,6 +183,7 @@ bool EditorClass::Start()
 
 int EditorClass::Update()
 {
+	
 	//game loop
 	while (window.isOpen())
 	{
@@ -225,6 +226,8 @@ int EditorClass::Update()
 
 		//ned to accoun t for the toolbar here for tools
 		worldPos = window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getView());
+		worldPos.x = worldPos.x - (windowWidth * 0.045f);
+
 		//Save and Load functionality
 		tools.saveButton.checkClick(std::bind(&Grid::save, this, tile), worldPos);
 		tools.loadButton.checkClick(std::bind(&Grid::load, this, tile), worldPos);
@@ -303,10 +306,20 @@ bool GameClass::Start()
 	//setup game
 	//
 	//load();
+	GameView = sf::View(sf::FloatRect(0, 0.f, windowWidth, windowHeight));
+	GameView.setViewport(sf::FloatRect(0.03f, 0, 1, 1));
+
 	gWindow.create(sf::VideoMode(windowWidth, windowHeight), "My Cool Game", sf::Style::Titlebar | sf::Style::Close);
 	//load our tiles here for the games
 	init(x,y);
-	//load(tile);
+	for (int i = 0; i < x; i++)
+	{
+		for (int j = 0; j < y; j++)
+		{
+			tile[i][j].init(i * 32 + ((windowWidth / 2) - ((32 * x) / 2)), j * 32);
+		}
+	}
+	load(tile);
 	return true;
 };
 
@@ -326,17 +339,36 @@ int GameClass::Update()
 
 					//cycle for current til
 				}
+				
+
+				//gWindow.draw(grid);
+
 			}
-			//Prepare the window for displaying stuff
 			gWindow.clear(sf::Color::White);
 			gWindow.setView(GameView);
-			
+
 			worldPos = gWindow.mapPixelToCoords(sf::Mouse::getPosition(gWindow), gWindow.getView());
-			
-			gWindow.draw(gScreen);
+			//Prepare the window for displaying stuff
+	
 			
 			deltaTime = clock.restart().asSeconds();
-			
+			//loop through all tiles to draw
+			for (int i = 0; i < x; i++)
+			{
+				for (int j = 0; j < y; j++)
+				{
+
+					tile[i][j].refreshTile();
+					gWindow.draw(tile[i][j]);
+
+				}
+			}
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+			{
+				printToConsole(tile);
+			}
+			//last but not least draw everything to screen
+		
 			
 			//last but not least draw everything to screen
 			gWindow.display();

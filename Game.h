@@ -48,34 +48,19 @@ public:
 	//collision info (based on sf::Sprite)
 };
 
-class GameScreen : public Grid
-{
-
-private:
-
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
-	{
-		target.draw(grid, states);
-	
-	}
-public:
-	Grid grid;
-	GameScreen();
-	//Init
-
-};
 
 
 class GameClass: public Grid
 {
 public:
+	Grid grid;
 	GameClass();
 	bool Start();
 	int Update();
 	sf::RenderWindow gWindow;
 	sf::View GameView;
 	Player player;
-	GameScreen gScreen;
+
 	//Saving a number to a file (did this with savetiles)
 	void SaveScore();
 	//Just put the player back at the start and reload the level file
@@ -94,4 +79,6 @@ public:
 	//physics values
 	float gravity;
 	float friction;
+	//printing out the tiles
+	void printToConsole(Tile** inctile);
 };

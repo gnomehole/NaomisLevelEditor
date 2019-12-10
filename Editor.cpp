@@ -11,6 +11,9 @@ EditorClass::EditorClass() {
 
 	curActorType = Actor::Type::None;
 	curTileType = Tile::Type::Sky;
+
+
+
 }
 
 

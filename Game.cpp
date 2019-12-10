@@ -10,9 +10,11 @@ GameClass::GameClass() {
 	gravity = 0.5;
 	friction = 10.0f;
 
+	//grid.setPosition(0, 0);
 
-	//void save(Tile inctile[x][y]);
-	//void load(Tile inctile[x][y]);
+
+	//save(Tile inctile[x][y]);
+	//load(Tile inctile[x][y]);
 }
 //void GameClass::LoadLevel()
 //{
@@ -167,10 +169,7 @@ GameClass::GameClass() {
 //	}
 //}
 
-GameScreen::GameScreen()
-{
-	grid.setPosition(100, 100);
-}
+
 
 Collision Player::CollisionCheck(sf::FloatRect other)
 {
@@ -307,6 +306,30 @@ int sign(float x)
 	return (x > 0.0f) - (x < 0.0f);
 }
 
+void GameClass::printToConsole(Tile** inctile)
+{
+	for (int i = 0; i < x; i++)
+	{
+		for (int j = 0; j < y; j++)
+		{
+			switch (tile[i][j].type)
+			{
+			case inctile[j][i].Type::Sky:
+				cout << "0";
+				break;
+			case inctile[j][i].Type::Platform:
+				cout << "1";
+				break;
+			case inctile[j][i].Type::Lava:
+				cout << "2";
+				break;
+			}
+			cout << ",";
+		}
+		cout << "\n";
+	}
+	cout << "success \n";
+}
 
 /*
 moving right 

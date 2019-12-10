@@ -1,15 +1,17 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Actor.h"
+#include <iostream>
 class Tile : public sf::Drawable, public sf::Transformable
 {
-private:
+public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		target.draw(sprite, states);
 		target.draw(actor, states);
+		//std::cout << "are tiles drawing?";
 	}
-public:
+
 	enum Type
 	{
 		Sky,
