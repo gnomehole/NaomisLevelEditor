@@ -1,8 +1,9 @@
 #pragma once
 #include "Tile.h"
+#include "Game.h"
 
 
-class Grid : public Tile
+class Grid : public Tile : public GameClass
 {
 	
 	public:

@@ -420,6 +420,11 @@ void Grid::load( Tile** inctile)
 						cout << "x = " << xStr << ", y = " << yStr << "\n";
 						inctile[stoi(xStr)][stoi(yStr)].actor.ChangeActor(Actor::Type::Player);
 
+						player.type = Actor::Type::Player;
+						player.init(stoi(xStr) * 32 + ((windowWidth / 2) - ((32 * x) / 2)), stoi(yStr) * 32);
+						player.startPos = sf::Vector2f(stoi(xStr) * 32 + ((windowWidth / 2) - ((32 * x) / 2)), stoi(yStr) * 32);
+						player.setPosition(player.startPos);
+
 						lineHold[curStart] = '<';
 						lineHold[curEnd] = '>';
 					}

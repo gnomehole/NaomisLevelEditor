@@ -82,3 +82,6 @@ public:
 	//printing out the tiles
 	void printToConsole(Tile** inctile);
 };
+
+int sign(int x);
+int sign(float x);

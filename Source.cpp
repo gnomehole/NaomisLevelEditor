@@ -29,7 +29,7 @@ int main()
 		Editor,
 		Game
 	};
-	GameType myGameType = Editor;
+	GameType myGameType = Game;
 
 	//menu screen with select mode
 	//clicking onm a mode 
@@ -328,6 +328,8 @@ int GameClass::Update()
 	// game loop
 		while (gWindow.isOpen())
 		{
+			deltaTime = clock.restart().asSeconds();
+			gWindow.clear(sf::Color::White);
 			sf::Event event;
 			while (gWindow.pollEvent(event))
 			{
@@ -344,46 +346,149 @@ int GameClass::Update()
 				//gWindow.draw(grid);
 
 			}
-			gWindow.clear(sf::Color::White);
-			gWindow.setView(GameView);
 
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+			{
+				if (player.grounded)
+				{
+					player.velocity.x += player.speed * deltaTime;
+				}
+				else
+				{
+					player.velocity.x += player.speed / 3 * deltaTime;
+				}
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+			{
+				if (player.grounded)
+				{
+					player.velocity.x -= player.speed * deltaTime;
+				}
+				else
+				{
+					player.velocity.x -= player.speed / 3 * deltaTime;
+				}
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+			{
+				if (player.grounded)
+				{
+					player.grounded = false;
+					player.velocity.x += player.speed * deltaTime;
+				}
+			}
+			//Friction
+			if (player.grounded)
+			{
+				if (abs(player.velocity.x) > 0.05f)
+				{
+					player.velocity.x - +friction * deltaTime * (sign(player.velocity.x));
+				}
+				else
+				{
+					player.velocity.x = 0.0f;
+				}
+
+			}
+		//maxiumim horizontal absolute velocity.
+			if (abs(player.velocity.x)>0.6f)
+			{
+				player.velocity.x = 0.06f * sign(player.velocity.x);
+			}
+			//max verti velocity adding gravity to the player
+
+			if (player.velocity.y < 1.0f)
+			{
+				player.velocity.y += gravity * deltaTime;
+			}
+			else if(player.velocity.y < -1.0f)
+			{
+				player.velocity.y = -1.0f;
+			}
+			//here is the players potential position if they aren't obstructed 
+			player.nextPos = player.getPosition() + player.velocity;
+
+			//projecting the "hitbox" of the player for it's next potential position.
+			player.nextRect = sf::FloatRect(player.nextPos, sf::Vector2f(32.f, 32.f));
+			//set grounded to false here because it will be set to true when we are on the ground
+			gWindow.setView(GameView);
+			//world position for ui 
 			worldPos = gWindow.mapPixelToCoords(sf::Mouse::getPosition(gWindow), gWindow.getView());
 			//Prepare the window for displaying stuff
 	
 			
-			deltaTime = clock.restart().asSeconds();
+			
 			//loop through all tiles to draw
 			for (int i = 0; i < x; i++)
 			{
 				for (int j = 0; j < y; j++)
 				{
-
 					tile[i][j].refreshTile();
 					gWindow.draw(tile[i][j]);
 
+					//check for colisions
+					if (tile[i][j].type == Tile::Type::Platform)
+					{
+						//check collision
+						Collision pcol = player.CollisionCheck(tile[i][j].sprite.getGlobalBounds());
+						if (pcol.hit)
+						{
+							//hit something vertically
+							if (pcol.dir.x == 0)
+							{
+								if (pcol.dir.y >= 0.0f)
+								{
+									//we're on top of the tile
+									player.nextPos.y = tile[i][j].sprite.getGlobalBounds().top - 32 - 0.1f;
+
+									player.grounded = true;
+									player.velocity.y = 0.0f;
+								}
+								else
+								{
+									player.grounded = false;
+									player.nextPos.y = tile[i][j].sprite.getGlobalBounds().top + tile[i][j].sprite.getGlobalBounds().height + 0.01f;
+									player.velocity.y = 0.0f;
+								}
+							}
+							else //horizontal
+							{
+								//right side
+								if (pcol.dir.x >= 0.0f)
+								{
+									//we want to stop not move to next tile
+									player.nextPos.x = tile[i][j].sprite.getGlobalBounds().left - 32;
+									player.velocity.x = 0.0f;
+
+								}
+								else //left side
+								{
+									player.nextPos.x = tile[i][j].sprite.getGlobalBounds().left + tile[i][j].sprite.getGlobalBounds().width;
+									player.velocity.x = 0.0f;
+
+								}
+							}
+						}
+
+					}
+
 				}
 			}
+
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 			{
 				printToConsole(tile);
 			}
 			//last but not least draw everything to screen
 		
+			player.setPosition(player.nextPos);
+			gWindow.draw(player);
+
+			//last but not least draw everything to screen
 			
 			//last but not least draw everything to screen
 			gWindow.display();
 		}
-
-
-
-	//in the game loop check for collisions
-	//if (tile[i][j].type == Tile::Type::Platform)
-	//{
-	//	Collision pcol = player
-	//
-	//}
-	//run game
-	//while (window.isOpen())
 	return 0;
 };
 
