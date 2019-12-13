@@ -23,7 +23,7 @@ public:
 	sf::Font font;
 	sf::Text text;
 	sf::FloatRect rBounds;
-
+	
 
 	//Init
 	Button();

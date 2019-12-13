@@ -15,10 +15,12 @@ private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		target.draw(LoadEditor, states);
+		target.draw(LoadGame, states);
 		target.draw(circle, states);
-		std::cout << "menu is drawing";
+		//std::cout << "menu is drawing";
 	}
 public:
+	Button LoadGame;
 	Button LoadEditor;
 	Button circle;
 	//Init
@@ -33,14 +35,24 @@ public:
 	int	mWindowHeight;
 	MenuScreen	mScreen;
 	std:: string debug;
+	
+	int mInt;
 
 	bool Start();
 	int Update();
+
+	bool WannaGoToGame;
+	bool WannaGoToEditor;
+
+	void ChangeGameTypetoGame();
+	//int ChangeGameTypetoEditor;
 	sf::Vector2f worldPos;
 	sf::View MenuView;
 	sf::RenderWindow mWindow;
 
+	bool GWannaGotoMenu;
 
+	MenuClass();
 
 
 

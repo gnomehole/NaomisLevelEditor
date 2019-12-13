@@ -1,9 +1,9 @@
 #pragma once
 #include "Tile.h"
-#include "Game.h"
 
 
-class Grid : public Tile : public GameClass
+
+class Grid : public Tile 
 {
 	
 	public:
@@ -15,8 +15,7 @@ class Grid : public Tile : public GameClass
 		sf::Vector2f worldPos;
 
 		Tile** tile = new Tile* [x];
-		void save(Tile** inctile);
-		void load(Tile** inctile);
+	
 		
 		Grid();
 		

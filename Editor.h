@@ -50,6 +50,8 @@ public:
 
 	bool Start();
 	int Update();
+	void eSave(Tile** inctile);
+	void eLoad(Tile** inctile);
 
 	//printing out the tiles
 	void printToConsole(Tile** inctile);

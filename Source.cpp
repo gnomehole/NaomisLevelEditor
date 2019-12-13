@@ -3,6 +3,7 @@
 #include <fstream>
 #include <list> 	
 #include <functional>
+#include <Windows.h>
 #include "Editor.h"
 #include "Game.h"
 #include "Menu.h"
@@ -11,9 +12,9 @@
 
 
 
+
 using namespace std;
 
-//does this need to return an int?
 int main()
 {
 
@@ -22,17 +23,35 @@ int main()
 	GameClass MyGameMode;
 	MenuClass MenuMode;
 
-	//doesn't work if i just get rid of the game case 
 	enum GameType
 	{
 		Menu,
 		Editor,
-		Game
+		Game,
+	//	Loader
 	};
-	GameType myGameType = Game;
+	GameType myGameType;
+	GameType curGameType;
 
-	//menu screen with select mode
-	//clicking onm a mode 
+	int curInt;
+	curInt = MenuMode.mInt;
+
+	myGameType = (GameType)curInt;
+
+	//eehh i need to do it a different way 
+	//conditions for the game type switch
+	//if (MenuMode.GWannaGotoMenu == true && MenuMode.WannaGoToEditor == false && MenuMode.WannaGoToGame == false)
+	//{
+	//	curGameType = Menu;
+	//	MenuMode.GWannaGotoMenu == false;
+	//	//cout << "I wanna o to menu :(";
+	//}
+	//if (MenuMode.GWannaGotoMenu == false && MenuMode.WannaGoToEditor == false && MenuMode.WannaGoToGame == true )
+	//{
+	//	curGameType = Game;
+	//	//cout << "I wanna o to menu :(";
+	//}
+
 
 	switch (myGameType)
 	{
@@ -42,7 +61,7 @@ int main()
 		if (!MenuMode.Start())
 		{
 			return EXIT_FAILURE;
-		
+		   
 		}
 		return MenuMode.Update();
 		return 0;
@@ -58,18 +77,25 @@ int main()
 	case Game:
 		if (!MyGameMode.Start())
 		{
+			
 			return EXIT_FAILURE;
 		}
 		return MyGameMode.Update();
 		return 0;
-
+//uuugh that wa sa bad idea
+//case Loader:
+//	curGameType = myGameType;
+//	return 0;
+//
 	}
+	
+
 
 	//game loop
 
 
 	//move to editor case
-
+	
 	//Game Loop
 
 	//??
@@ -79,15 +105,17 @@ int main()
 
 bool MenuClass::Start()
 {
+	
 	int	mWindowWidth = 720;
 	int	mWindowHeight = 650;
+	GWannaGotoMenu = false;
 	//MenuView = sf::View(sf::FloatRect(0, 0.f, mWindowWidth, mWindowHeight));
 	//MenuView.setViewport(sf::FloatRect(0.03f, 0, 1, 1));
 	mWindow.create(sf::VideoMode(mWindowWidth, mWindowHeight), "Menu", sf::Style::Titlebar | sf::Style::Close);
 	//Window.setView(MenuView);
 	//Window.clear(sf::Color::White);
 
-
+	
 	return true;
 
 }
@@ -112,11 +140,18 @@ int MenuClass::Update()
 			//Prepare the window for displaying stuff
 			mWindow.clear(sf::Color::White);
 			//Window.setView(MenuView);
-
+			mScreen.LoadGame.checkClick(std::bind(&MenuClass::ChangeGameTypetoGame, this), worldPos);
 			//mButtons.LoadEditor.checkClick(std::bind(&EditorClass::, this, tile), worldPos);
 			worldPos = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow), mWindow.getView());
 			mWindow.draw(mScreen);
 		}
+		if (mInt == 2.0f)
+		{
+			main();
+			return mInt;
+			return 0;
+		}
+
 		mWindow.display();
 	}
 	return 0;
@@ -176,7 +211,7 @@ bool EditorClass::Start()
 		}
 	}
 
-	load(tile);
+	eLoad(tile);
 
 	return true;
 }
@@ -229,8 +264,8 @@ int EditorClass::Update()
 		worldPos.x = worldPos.x - (windowWidth * 0.045f);
 
 		//Save and Load functionality
-		tools.saveButton.checkClick(std::bind(&Grid::save, this, tile), worldPos);
-		tools.loadButton.checkClick(std::bind(&Grid::load, this, tile), worldPos);
+		tools.saveButton.checkClick(std::bind(&EditorClass::eSave, this, tile), worldPos);
+		tools.loadButton.checkClick(std::bind(&EditorClass::eLoad, this, tile), worldPos);
 
 		//loop the toolbar tiles
 		for (int i = 0; i < 9; i++)
@@ -306,6 +341,7 @@ bool GameClass::Start()
 	//setup game
 	//
 	//load();
+	//mClass.GWannaGotoMenu = false;
 	GameView = sf::View(sf::FloatRect(0, 0.f, windowWidth, windowHeight));
 	GameView.setViewport(sf::FloatRect(0.03f, 0, 1, 1));
 
@@ -319,7 +355,9 @@ bool GameClass::Start()
 			tile[i][j].init(i * 32 + ((windowWidth / 2) - ((32 * x) / 2)), j * 32);
 		}
 	}
-	load(tile);
+	//set grounded to false here because it will be set to true when we are on the ground
+	player.grounded = false;
+	gLoad(tile);
 	return true;
 };
 
@@ -346,74 +384,128 @@ int GameClass::Update()
 				//gWindow.draw(grid);
 
 			}
+			
+			KeyReleased = false;
 
+			//PLAYER MOVEMENT & PHYSICS
+			if (sf::Event::KeyReleased && event.key.code == sf::Keyboard::D)
+			{
+				SkiddingRight = true;
+				MovingRight = false;
+			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 			{
+				SkiddingRight = false;
+				MovingRight = true;
 				if (player.grounded)
 				{
-					player.velocity.x += player.speed * deltaTime;
+					player.velocity.x +=  +player.speed* 5  * deltaTime;
 				}
 				else
 				{
-					player.velocity.x += player.speed / 3 * deltaTime;
+					player.velocity.x += + player.speed / 3 * deltaTime;
 				}
+				//cout << player.velocity.x, player.velocity.y;
+			}
+			if (SkiddingRight == true)
+			{
+
+				// right friction
+				player.velocity.x = player.velocity.x - 0.2f;
+				SkiddingRight = false;
+			}
+			if (sf::Event::KeyReleased && event.key.code == sf::Keyboard::A)
+			{
+				SkiddingLeft = true;
+				MovingLeft = false;
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 			{
+				SkiddingLeft = false;
+				MovingLeft= true;
 				if (player.grounded)
 				{
-					player.velocity.x -= player.speed * deltaTime;
+					player.velocity.x -=  player.speed * 5 * deltaTime;
 				}
 				else
 				{
-					player.velocity.x -= player.speed / 3 * deltaTime;
+					player.velocity.x -=  player.speed / 3 * deltaTime;
 				}
+				
+				//cout << player.velocity.x, player.velocity.y;
+			}
+			if (SkiddingLeft == true)
+			{
+
+				// right friction
+				player.velocity.x = player.velocity.x + 0.2f;
+				SkiddingLeft = false;
+
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 			{
 				if (player.grounded)
 				{
+					player.velocity.y -= 3.f + player.speed * deltaTime;
 					player.grounded = false;
-					player.velocity.x += player.speed * deltaTime;
+				
+				
+					cout << "jumpin";
+
 				}
+				//cout << player.velocity.x, player.velocity.y;
 			}
-			//Friction
-			if (player.grounded)
+			//max horizontal velocity
+			//gotta use the sign thing here ? i think
+			if (player.velocity.x > 5.f)
 			{
-				if (abs(player.velocity.x) > 0.05f)
-				{
-					player.velocity.x - +friction * deltaTime * (sign(player.velocity.x));
-				}
-				else
+				player.velocity.x = 5.f;
+			}
+			if (player.velocity.x < -5.f)
+			{
+				player.velocity.x = -5.f;
+			}
+			if (abs(player.velocity.x) < 1.0f && SkiddingRight == false && MovingRight == false && SkiddingLeft == false && MovingLeft == false)
 				{
 					player.velocity.x = 0.0f;
 				}
+			if (!player.velocity.y > -.5f)
+				{
+					player.velocity.y += gravity * 2 * deltaTime;
+					//cout << player.velocity.y;
+				}
+			else if (player.velocity.y > 1.0f)
+				{
+					player.velocity.y = 1.0f;
+				}
+			
+			//respwaning the player at the starting point if they die and still have lives left
+			if (player.isDead == true && player.lives > -1.0f)
+			{
+				player.velocity.x = 0.f;
+				player.velocity.y = 0.f;
+				player.nextPos = player.startPos;
+				player.isDead = false;
+				--player.lives;
+			}
+			else {  //here is the players potential position if they aren't obstructed 
+				player.nextPos = player.getPosition() + player.velocity;
+			}
+			if (player.isDead == true && player.lives < 1.0f)
+			{
+				mClass.mInt = 0;
+				main();
+				cout << "wanna go to the menu";
+				return mInt;
+				;
+			}
 
-			}
-		//maxiumim horizontal absolute velocity.
-			if (abs(player.velocity.x)>0.6f)
-			{
-				player.velocity.x = 0.06f * sign(player.velocity.x);
-			}
-			//max verti velocity adding gravity to the player
-
-			if (player.velocity.y < 1.0f)
-			{
-				player.velocity.y += gravity * deltaTime;
-			}
-			else if(player.velocity.y < -1.0f)
-			{
-				player.velocity.y = -1.0f;
-			}
-			//here is the players potential position if they aren't obstructed 
-			player.nextPos = player.getPosition() + player.velocity;
 
 			//projecting the "hitbox" of the player for it's next potential position.
 			player.nextRect = sf::FloatRect(player.nextPos, sf::Vector2f(32.f, 32.f));
-			//set grounded to false here because it will be set to true when we are on the ground
 			gWindow.setView(GameView);
 			//world position for ui 
-			worldPos = gWindow.mapPixelToCoords(sf::Mouse::getPosition(gWindow), gWindow.getView());
+			//WorldPos = gWindow.mapPixelToCoords(sf::Mouse::getPosition(gWindow), gWindow.getView());
 			//Prepare the window for displaying stuff
 	
 			
@@ -436,19 +528,21 @@ int GameClass::Update()
 							//hit something vertically
 							if (pcol.dir.x == 0)
 							{
+								
 								if (pcol.dir.y >= 0.0f)
 								{
 									//we're on top of the tile
 									player.nextPos.y = tile[i][j].sprite.getGlobalBounds().top - 32 - 0.1f;
-
 									player.grounded = true;
 									player.velocity.y = 0.0f;
+									//cout << "ow my butt";
 								}
 								else
 								{
 									player.grounded = false;
 									player.nextPos.y = tile[i][j].sprite.getGlobalBounds().top + tile[i][j].sprite.getGlobalBounds().height + 0.01f;
 									player.velocity.y = 0.0f;
+									//cout << "ow my head";
 								}
 							}
 							else //horizontal
@@ -459,26 +553,51 @@ int GameClass::Update()
 									//we want to stop not move to next tile
 									player.nextPos.x = tile[i][j].sprite.getGlobalBounds().left - 32;
 									player.velocity.x = 0.0f;
+									cout << "right col";
 
 								}
 								else //left side
 								{
 									player.nextPos.x = tile[i][j].sprite.getGlobalBounds().left + tile[i][j].sprite.getGlobalBounds().width;
 									player.velocity.x = 0.0f;
-
+									cout << "left col";
 								}
 							}
 						}
 
 					}
 
+					if (tile[i][j].type == Tile::Type::Lava)
+					{
+						//check collision
+						Collision pcol = player.CollisionCheck(tile[i][j].sprite.getGlobalBounds());
+						if (pcol.hit)
+						{
+							//hit something vertically
+							if (pcol.dir.x == 0)
+							{
+
+								if (pcol.dir.y >= 0.0f)
+								{
+									//we're on top of the tile
+									//player.nextPos.y = tile[i][j].sprite.getGlobalBounds().top - 32 - 0.1f;
+									player.isDead = true;
+									cout << "ow my butt";
+								}
+							}
+						}
+						
+					}
+
 				}
 			}
 
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-			{
-				printToConsole(tile);
-			}
+			
+			//testing grounded collision
+			//bool b = player.grounded;
+			//std::cout << std::boolalpha << b;
+
+
 			//last but not least draw everything to screen
 		
 			player.setPosition(player.nextPos);

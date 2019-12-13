@@ -1,5 +1,7 @@
 #pragma once
 #include "Editor.h"
+#include "Grid.h"
+#include "Menu.h"
 
 using namespace std;
 
@@ -7,6 +9,16 @@ struct Collision
 {
 	bool hit;
 	sf::Vector2f dir;
+};
+
+
+
+class Enemy : public Actor
+{
+public:
+	bool isDead;
+	//what it looks like
+	//collision info (based on sf::Sprite)
 };
 
 class Player : public Actor
@@ -40,26 +52,29 @@ public:
 
 };
 
-class Enemy : public Actor
+class GameClass: public Grid , public MenuClass
 {
 public:
-	bool isDead;
-	//what it looks like
-	//collision info (based on sf::Sprite)
-};
-
-
-
-class GameClass: public Grid
-{
-public:
-	Grid grid;
 	GameClass();
+	Grid grid;
 	bool Start();
 	int Update();
 	sf::RenderWindow gWindow;
 	sf::View GameView;
 	Player player;
+	MenuClass mClass;
+	void gSave(Tile** inctile);
+	void gLoad(Tile** inctile);
+
+	bool KeyReleased;
+
+	bool SkiddingRight;
+
+	bool SkiddingLeft;
+
+	bool MovingRight;
+
+	bool MovingLeft;
 
 	//Saving a number to a file (did this with savetiles)
 	void SaveScore();
@@ -81,6 +96,7 @@ public:
 	float friction;
 	//printing out the tiles
 	void printToConsole(Tile** inctile);
+
 };
 
 int sign(int x);
