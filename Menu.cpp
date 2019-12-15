@@ -27,14 +27,15 @@ MenuScreen::MenuScreen()
 
 void MenuClass::ChangeGameTypetoGame()
 {
-	mInt = 2;
+	WannaGoToGame = true; 
 	std::cout << "Game load button working?";
-	
 }
 
 MenuClass::MenuClass()
 {
 	GWannaGotoMenu = true;
+	//
+	mInt = 0;
 }
 
 

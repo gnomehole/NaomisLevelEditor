@@ -1,9 +1,11 @@
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <fstream>
 #include <list> 	
 #include <functional>
 #include <Windows.h>
+#include "GameState.h"
 #include "Editor.h"
 #include "Game.h"
 #include "Menu.h"
@@ -13,31 +15,33 @@
 
 
 
-using namespace std;
 
+
+using namespace std;
 int main()
 {
 
-	EditorClass EditorMode;
-	//works fine if i get rid of this game mode class instance in the source cpp
-	GameClass MyGameMode;
-	MenuClass MenuMode;
+	GameState StateSwitcher;
+	
+	bool running = true;
 
-	enum GameType
+	//if (!StateSwitcher.Start())
+	//{
+	//	return EXIT_FAILURE;
+	//}
+	while (running == true)
 	{
-		Menu,
-		Editor,
-		Game,
-	//	Loader
-	};
-	GameType myGameType;
-	GameType curGameType;
+		StateSwitcher.Update();
 
-	int curInt;
-	curInt = MenuMode.mInt;
+	}
+	return 0;
 
-	myGameType = (GameType)curInt;
 
+	//if (MenuMode.WannaGoToGame == true)
+	//{
+	//	myGameType = Game;
+	//	goto GameCaseMain;
+	//}
 	//eehh i need to do it a different way 
 	//conditions for the game type switch
 	//if (MenuMode.GWannaGotoMenu == true && MenuMode.WannaGoToEditor == false && MenuMode.WannaGoToGame == false)
@@ -51,54 +55,62 @@ int main()
 	//	curGameType = Game;
 	//	//cout << "I wanna o to menu :(";
 	//}
+}
 
+bool GameState::Start()
+{
+	return true;
+}
 
-	switch (myGameType)
-	{
-	case Menu:
-
-
-		if (!MenuMode.Start())
-		{
-			return EXIT_FAILURE;
-		   
-		}
-		return MenuMode.Update();
-		return 0;
-
-	case Editor:
-		if (!EditorMode.Start())
-		{
-			return EXIT_FAILURE;
-		}
-		return EditorMode.Update();
-		return 0;
-
-	case Game:
-		if (!MyGameMode.Start())
-		{
-			
-			return EXIT_FAILURE;
-		}
-		return MyGameMode.Update();
-		return 0;
-//uuugh that wa sa bad idea
-//case Loader:
-//	curGameType = myGameType;
-//	return 0;
-//
-	}
+int GameState::Update()
+{
 	
-
-
-	//game loop
-
-
-	//move to editor case
+	//running = true;
 	
-	//Game Loop
+	myGameType = (GameType)MenuMode.mInt;
 
-	//??
+
+		cout << "how often";
+		switch (myGameType)
+		{
+		MenuCaseMain:	case Menu:
+
+
+			if (!MenuMode.Start())
+			{
+				return EXIT_FAILURE;
+			}
+			cout << "how often is this happening";
+			return MenuMode.Update();
+			//return 0;
+			cout << "how often is this happening2";
+			//if (MenuMode.WannaGoToGame == true)
+			//{
+			//
+			//	myGameType = Game;
+			//};
+			return 0;
+
+		EditorCaseMain:	case Editor:
+			if (!EditorMode.Start())
+			{
+				return EXIT_FAILURE;
+			}
+			return EditorMode.Update();
+			return 0;
+
+		GameCaseMain:	case Game:
+			if (!MyGameMode.Start())
+			{
+
+				return EXIT_FAILURE;
+			}
+			return MyGameMode.Update();
+			return 0;
+		}
+
+
+	
 	return 0;
 
 }
@@ -145,11 +157,12 @@ int MenuClass::Update()
 			worldPos = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow), mWindow.getView());
 			mWindow.draw(mScreen);
 		}
-		if (mInt == 2.0f)
+
+		if (WannaGoToGame == true)
 		{
-			main();
-			return mInt;
+			mInt = 2;	
 			return 0;
+		
 		}
 
 		mWindow.display();

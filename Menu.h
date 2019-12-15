@@ -5,6 +5,7 @@
 #include <list> 	
 #include <functional>
 #include "Button.h"
+//#include "Game.h"
 //#include "arial.h"
 
 
@@ -35,7 +36,9 @@ public:
 	int	mWindowHeight;
 	MenuScreen	mScreen;
 	std:: string debug;
-	
+
+	//GameClass Gtype;
+	//using this int to change the enum in the gamestate class when we click on buttons in the menu
 	int mInt;
 
 	bool Start();
